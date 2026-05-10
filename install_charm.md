@@ -48,4 +48,58 @@ uv pip	#提供与经典 pip 工具兼容的接口，可直接使用 requirements
 uv venv	#创建一个独立的虚拟环境，类似于 python -m venv。
 ```
 
-## 
+## 配置配对环境库（`Charm-Crypto`）
+### 准备编译环境
+首先，确保你的系统已安装必要的编译工具和依赖包:
+- 基础编译工具链：这包括了GCC、G++和Make。
+  ```bash
+    sudo apt update
+    sudo apt install -y build-essential  # 安装 gcc, g++, make 等核心工具
+  ```
+
+- 编译依赖库：安装Charm编译过程中需要用到的一些库。
+  ```bash
+    sudo apt install -y m4 flex bison libssl-dev libgmp-dev
+  ```
+
+- 手动安装`libpbc-dev`
+  ```bash
+    wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz
+    tar -xzf pbc-0.5.14.tar.gz
+    cd pbc-0.5.14
+
+    ./configure
+    make
+    sudo make install
+    sudo ldconfig
+  ```
+
+- 在虚拟环境中安装 Python 依赖：
+  由于Charm 要求特定版本的 pyparsing，因此额外执行`uv add pyparsing` 即可。
+
+- 安装 Charm
+  ```bash
+    git clone https://github.com/JHUISI/charm.git
+    cd charm
+    ./configure.sh #checking for PBC... yes  checking for GMP... yes
+    make
+    sudo make install
+  ```
+
+- 验证是否成功
+  ```python
+    from charm.toolbox.pairinggroup import PairingGroup, G1, pair
+
+    group = PairingGroup('SS512')
+    g = group.random(G1)
+    a = group.random()
+    b = group.random()
+
+    print(pair(g ** a, g ** b))
+  ```
+
+## 由于我的疏忽，其实已经有更新的框架了
+后面安装可以直接用
+```python
+uv pip install charm-crypto-framework
+```
