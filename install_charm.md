@@ -103,3 +103,5 @@ uv venv	#创建一个独立的虚拟环境，类似于 python -m venv。
 ```python
 uv pip install charm-crypto-framework
 ```
+# 安装参考可以看下面链接
+https://pypi.org/project/charm-crypto-framework/?utm_source=chatgpt.com
