@@ -103,17 +103,19 @@ volumes:        # 卷定义
     services:
         opencode:
             image: my-opencode
-            network_mode: "host"           # 使用主机网络
+            container_name: opencode
+            working_dir: /workspace
+            environment:
+                - XDG_CONFIG_HOME=/opencode/config
+                - XDG_DATA_HOME=/opencode/data
+                - XDG_CACHE_HOME=/opencode/cache
+                - XDG_STATE_HOME=/opencode/state
+            volumes:
+                - D:\workspace\opencode_test\opencode:/opencode
+                - D:\workspace\opencode_test\workspace:/workspace
             stdin_open: true
             tty: true
-            env_file:
-            - .env
-            volumes:
-            - ./opencode_config:/workspace/.config/opencode
-            - .:/workspace
-            working_dir: /workspace/opencode_test
-            entrypoint: ["sleep", "infinity"]    # 直接让容器无限休眠，保持运行
-            # 注意：不要同时写 command，除非需要传递给 entrypoint
+            entrypoint: ["sleep", "infinity"]
    ```
    - opencode.json
     ```json
